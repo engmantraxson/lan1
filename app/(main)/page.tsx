@@ -1,12 +1,72 @@
 'use client';
 
 import { allTopics } from '@/lib/topics';
-import { Star, Check, Lock, Filter } from 'lucide-react';
+import { Star, Check, Lock, Filter, Globe } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
 
+const languages = [
+  { code: 'es', name: 'Spanish', flag: '🇪🇸' },
+  { code: 'fr', name: 'French', flag: '🇫🇷' },
+  { code: 'de', name: 'German', flag: '🇩🇪' },
+  { code: 'it', name: 'Italian', flag: '🇮🇹' },
+  { code: 'ja', name: 'Japanese', flag: '🇯🇵' },
+  { code: 'ko', name: 'Korean', flag: '🇰🇷' },
+  { code: 'zh-CN', name: 'Chinese (Simplified)', flag: '🇨🇳' },
+  { code: 'ru', name: 'Russian', flag: '🇷🇺' },
+  { code: 'pt-BR', name: 'Portuguese (BR)', flag: '🇧🇷' },
+  { code: 'pt-PT', name: 'Portuguese (PT)', flag: '🇵🇹' },
+  { code: 'vi', name: 'Vietnamese', flag: '🇻🇳' },
+  { code: 'ur', name: 'Urdu', flag: '🇵🇰' },
+  { code: 'uk', name: 'Ukrainian', flag: '🇺🇦' },
+  { code: 'ti', name: 'Tigrinya', flag: '🇪🇷' },
+  { code: 'th', name: 'Thai', flag: '🇹🇭' },
+  { code: 'te', name: 'Telugu', flag: '🇮🇳' },
+  { code: 'ta', name: 'Tamil', flag: '🇮🇳' },
+  { code: 'sv', name: 'Swedish', flag: '🇸🇪' },
+  { code: 'sl', name: 'Slovenian', flag: '🇸🇮' },
+  { code: 'sk', name: 'Slovak', flag: '🇸🇰' },
+  { code: 'sr', name: 'Serbian', flag: '🇷🇸' },
+  { code: 'ro', name: 'Romanian', flag: '🇷🇴' },
+  { code: 'pa', name: 'Punjabi', flag: '🇮🇳' },
+  { code: 'pl', name: 'Polish', flag: '🇵🇱' },
+  { code: 'fa', name: 'Persian', flag: '🇮🇷' },
+  { code: 'nn', name: 'Nynorsk', flag: '🇳🇴' },
+  { code: 'no', name: 'Norwegian', flag: '🇳🇴' },
+  { code: 'mr', name: 'Marathi', flag: '🇮🇳' },
+  { code: 'mk', name: 'Macedonian', flag: '🇲🇰' },
+  { code: 'lt', name: 'Lithuanian', flag: '🇱🇹' },
+  { code: 'lv', name: 'Latvian', flag: '🇱🇻' },
+  { code: 'kk', name: 'Kazakh', flag: '🇰🇿' },
+  { code: 'kn', name: 'Kannada', flag: '🇮🇳' },
+  { code: 'id', name: 'Indonesian', flag: '🇮🇩' },
+  { code: 'hu', name: 'Hungarian', flag: '🇭🇺' },
+  { code: 'hi', name: 'Hindi', flag: '🇮🇳' },
+  { code: 'he', name: 'Hebrew', flag: '🇮🇱' },
+  { code: 'el', name: 'Greek', flag: '🇬🇷' },
+  { code: 'ka', name: 'Georgian', flag: '🇬🇪' },
+  { code: 'et', name: 'Estonian', flag: '🇪🇪' },
+  { code: 'eo', name: 'Esperanto', flag: '🟩' },
+  { code: 'en-US', name: 'English (US)', flag: '🇺🇸' },
+  { code: 'ady', name: 'Adyghe', flag: '🇷🇺' },
+  { code: 'af', name: 'Afrikaans', flag: '🇿🇦' },
+  { code: 'am', name: 'Amharic', flag: '🇪🇹' },
+  { code: 'ar', name: 'Arabic', flag: '🇸🇦' },
+  { code: 'hy', name: 'Armenian', flag: '🇦🇲' },
+  { code: 'be', name: 'Belarusian', flag: '🇧🇾' },
+  { code: 'bn', name: 'Bengali', flag: '🇧🇩' },
+  { code: 'bs', name: 'Bosnian', flag: '🇧🇦' },
+  { code: 'bg', name: 'Bulgarian', flag: '🇧🇬' },
+  { code: 'ca', name: 'Catalan', flag: '🇪🇸' },
+  { code: 'hr', name: 'Croatian', flag: '🇭🇷' },
+  { code: 'cs', name: 'Czech', flag: '🇨🇿' },
+  { code: 'da', name: 'Danish', flag: '🇩🇰' },
+  { code: 'nl', name: 'Dutch', flag: '🇳🇱' }
+].sort((a, b) => a.name.localeCompare(b.name));
+
 export default function Home() {
   const [difficultyFilter, setDifficultyFilter] = useState('all');
+  const [selectedLanguage, setSelectedLanguage] = useState(languages[0].code);
 
   // We will display the first 100 topics on the dashboard as requested
   const dashboardTopics = allTopics.slice(0, 100).filter(topic => 
@@ -15,6 +75,27 @@ export default function Home() {
 
   return (
     <div className="flex flex-col items-center py-8">
+      {/* Language Selector */}
+      <div className="w-full flex justify-end mb-4">
+        <div className="relative flex items-center bg-white border-2 border-slate-200 rounded-2xl px-4 py-2 shadow-sm">
+          <Globe className="text-slate-400 mr-2" size={20} />
+          <select 
+            value={selectedLanguage}
+            onChange={(e) => setSelectedLanguage(e.target.value)}
+            className="bg-transparent font-bold text-slate-700 focus:outline-none appearance-none pr-8 cursor-pointer"
+          >
+            {languages.map(lang => (
+              <option key={lang.code} value={lang.code}>
+                {lang.flag} {lang.name}
+              </option>
+            ))}
+          </select>
+          <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
+            <div className="w-2 h-2 border-b-2 border-r-2 border-slate-400 transform rotate-45"></div>
+          </div>
+        </div>
+      </div>
+
       <div className="w-full bg-green-700 text-white rounded-2xl p-6 mb-4 flex justify-between items-center shadow-sm">
         <div>
           <h2 className="text-2xl font-bold mb-1">Section 1: Rookie</h2>
@@ -72,15 +153,16 @@ export default function Home() {
               {/* Connecting Line (except for first item) */}
               {index > 0 && (
                 <div 
-                  className="absolute w-2 -top-8 -z-10"
+                  className="absolute w-2 -z-10"
                   style={{ 
-                    height: '40px',
+                    top: '-64px',
+                    height: '64px',
                     backgroundColor: topic.locked ? '#e2e8f0' : '#15803d',
                   }}
                 />
               )}
 
-              <Link href={`/lesson/${topic.id}`}>
+              <Link href={`/lesson/${topic.id}`} className="flex flex-col items-center">
                 <div className="relative group">
                   {/* Floating Label for current topic */}
                   {isCurrent && (
@@ -124,6 +206,20 @@ export default function Home() {
                       />
                     </svg>
                   )}
+                </div>
+
+                {/* Topic Name and Icon Pill */}
+                <div className={`mt-3 flex items-center gap-1.5 px-3 py-1.5 rounded-xl border-2 shadow-sm transition-colors ${
+                  topic.locked 
+                    ? 'bg-slate-50 border-slate-200 text-slate-400' 
+                    : topic.completed
+                    ? 'bg-green-50 border-green-200 text-green-700'
+                    : 'bg-white border-slate-200 text-slate-700'
+                }`}>
+                  <topic.icon size={16} />
+                  <span className="font-bold text-sm">
+                    {topic.title}
+                  </span>
                 </div>
               </Link>
             </div>
